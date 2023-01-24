@@ -26,7 +26,7 @@ phone_number int
 );
 
 create table Admins (
-user_ID int primary key auto_increment not null unique,
+admin_ID int primary key auto_increment not null unique,
 admin_name varchar(50) not null,
 admin_surname varchar(50) not null,
 email varchar(40) not null unique,
