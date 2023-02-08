@@ -64,6 +64,7 @@ insert into Books (book_name, author, genre, release_date, page_count, price, st
 insert into Books (book_name, author, genre, release_date, page_count, price, stock) values ("A game of thrones", "George R.R. Martin", "Fantasy", "1996-8-1", 694, 9611, 10);
 insert into Books (book_name, author, genre, release_date, page_count, price, stock) values ("El resplandor", "Stephen King", "Terror", "1977-1-28", 447, 6399, 20);
 insert into Books (book_name, author, genre, release_date, page_count, price, stock) values ("El principito", "Saint-Exupery", "Child books", "2006-7-17", 541, 2200, 0);
+insert into Books (book_name, author, genre, release_date, page_count, price, stock) values ("El camino de los reyes", "Brandon Sanderson", "Fantasy", "2010-8-31", 1007, 10799, 15);
 
 /*Carts*/
 insert into Carts (cart_owner, products) values ("valel@mail.com", "El principito");
@@ -73,3 +74,19 @@ insert into Carts (cart_owner, products) values ("julip@mail.com", "El resplando
 /*Orders*/
 insert into Orders (order_client, total_price, products) values ("miguef@mail.com", 10799, "El imperio final, La comunidad del anillo");
 insert into Orders (order_client, total_price, products) values ("pedroper@mail.com", 14598, "El imperio final, El resplandor");
+
+/*Views*/
+create or replace view clients as
+	(select order_client from Orders);
+    
+create or replace view low_stock as
+	(select book_name from Books where stock < 10);
+    
+create or replace view past_century as
+	(select book_name from Books where release_date < "2000-1-1");
+
+create or replace view brandon_books as
+	(select book_name from Books where author like upper("%brandon sanderson%"));
+    
+create or replace view short_books as
+	(select book_name, author, page_count from Books where page_count < 500);
