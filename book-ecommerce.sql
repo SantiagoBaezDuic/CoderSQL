@@ -90,3 +90,33 @@ create or replace view brandon_books as
     
 create or replace view short_books as
 	(select book_name, author, page_count from Books where page_count < 500);
+    
+/*Functions*/
+drop function discount_price;
+
+DELIMITER //
+create function discount_price(price int, discount int) returns int
+deterministic
+begin
+declare final_price int;
+set final_price = (price / 100) * (100 - discount);
+return final_price;
+end
+//
+
+drop function books_by_author;
+
+DELIMITER //
+create function books_by_author(book_author varchar(30), author varchar(30), book_name varchar(50)) returns varchar(20)
+deterministic
+begin
+if upper(author) like upper(book_author)
+then return book_name;
+else return null;
+end if;
+end
+//
+
+select discount_price(price, 20) descuento from Books;
+
+select books_by_author("brandon sanderson", author, book_name) from Books;
