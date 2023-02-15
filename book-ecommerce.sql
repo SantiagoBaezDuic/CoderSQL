@@ -1,4 +1,5 @@
 /*Database creation and usage setting*/
+drop database ecommerce;
 create database if not exists ecommerce;
 use ecommerce;
 
