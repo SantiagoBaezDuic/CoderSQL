@@ -1,5 +1,5 @@
 /*Database creation and usage setting*/
-drop database ecommerce;
+drop database if exists  ecommerce;
 create database if not exists ecommerce;
 use ecommerce;
 
@@ -29,7 +29,8 @@ user_surname varchar(50) not null,
 email varchar(40) not null unique,
 pass varchar(15) not null,
 address varchar(50),
-phone_number int
+phone_number int,
+newsletter boolean not null
 );
 
 /*Admins table creation*/
@@ -56,12 +57,55 @@ total_price int,
 products varchar(100)
 );
 
+/*Trigger tables*/
+
+/*Newsletter*/
+create table if not exists Newsletter (
+email_id int primary key auto_increment not null unique,
+email varchar(40) not null unique
+);
+
+/*Price change*/
+create table if not exists PriceChange (
+operation_id int primary key auto_increment not null unique,
+operation_date datetime,
+previous_price int,
+new_price int,
+operation_user varchar(40)
+);
+
+/*Trigger declaration*/
+
+/*User insertion trigger(Newsletter)*/
+DELIMITER //
+create trigger Newsletter_Subscription
+before insert on Users
+for each row
+begin
+	if (new.newsletter = true) then
+		insert into Newsletter (email) values (new.email);
+    end if;
+end;
+//
+
+/*Price change detection*/
+DELIMITER //
+create trigger Price_change
+after update on Books
+for each row
+begin
+	if (new.price <> old.price) then
+		insert into PriceChange (operation_date, previous_price, new_price, operation_user) values (current_timestamp(), old.price, new.price, user());
+    end if;
+end;
+//
+
 /*Users table insertion*/
-insert ignore into Users (user_name, user_surname, email, pass, address, phone_number) values ("Pedro", "Pérez", "pedroper@mail.com", "c15235", "Cabildo 1675", 1168913576);
-insert ignore into Users (user_name, user_surname, email, pass, address, phone_number) values ("Miguel", "Fernández", "miguef@mail.com", "c12345", "Panamá 332", 1197451268);
-insert ignore into Users (user_name, user_surname, email, pass, address, phone_number) values ("Valeria", "López", "valel@mail.com", "c68421", "Catamarca 1125", 1146218796);
-insert ignore into Users (user_name, user_surname, email, pass, address, phone_number) values ("Daniel", "Lopez", "danilopez@mail.com", "c96512", "Uruguay 3561", 1121532354);
-insert ignore into Users (user_name, user_surname, email, pass, address, phone_number) values ("Juliana", "Pérez", "julip@mail.com", "c99998", "Brasil 275", 1168945120);
+insert ignore into Users (user_name, user_surname, email, pass, address, phone_number, newsletter) values ("Pedro", "Pérez", "pedroper@mail.com", "c15235", "Cabildo 1675", 1168913576, true);
+insert ignore into Users (user_name, user_surname, email, pass, address, phone_number, newsletter) values ("Miguel", "Fernández", "miguef@mail.com", "c12345", "Panamá 332", 1197451268, true);
+insert ignore into Users (user_name, user_surname, email, pass, address, phone_number, newsletter) values ("Valeria", "López", "valel@mail.com", "c68421", "Catamarca 1125", 1146218796, false);
+insert ignore into Users (user_name, user_surname, email, pass, address, phone_number, newsletter) values ("Daniel", "Lopez", "danilopez@mail.com", "c96512", "Uruguay 3561", 1121532354, false);
+insert ignore into Users (user_name, user_surname, email, pass, address, phone_number, newsletter) values ("Juliana", "Pérez", "julip@mail.com", "c99998", "Brasil 275", 1168945120, true);
 
 /*Admins table insertion*/
 insert ignore into Admins (admin_name, admin_surname, email, pass) values ("Julián", "Lowe", "julianlowe@mail.com", "contra123");
@@ -75,6 +119,10 @@ insert ignore into Books (book_name, author, genre, release_date, page_count, pr
 insert ignore into Books (book_name, author, genre, release_date, page_count, price, stock) values ("El resplandor", "Stephen King", "Terror", "1977-1-28", 447, 6399, 20);
 insert ignore into Books (book_name, author, genre, release_date, page_count, price, stock) values ("El principito", "Saint-Exupery", "Child books", "2006-7-17", 541, 2200, 0);
 insert ignore into Books (book_name, author, genre, release_date, page_count, price, stock) values ("El camino de los reyes", "Brandon Sanderson", "Fantasy", "2010-8-31", 1007, 10799, 15);
+
+/*Price change for trigger test*/
+update Books set price = 8500 where book_ID = 1;
+update Books set price = 6000 where book_ID = 4;
 
 /*Carts table insertion*/
 insert ignore into Carts (cart_owner, products) values ("valel@mail.com", "El principito");
@@ -135,12 +183,16 @@ drop procedure if exists sort;
 drop procedure if exists deletequery;
 
 DELIMITER //
-create procedure sort(in tabla varchar(30), in sorter varchar(50),in direction varchar(4))
+create procedure sort(
+in tabla varchar(30),
+in sorter varchar(50),
+in direction varchar(4))
 begin
 	if upper(direction) = "DESC"
     then
 	select * from tabla
-    order by sorter desc;
+    order by sorter
+    desc;
     else
     select * from tabla
     order by sorter;
@@ -160,7 +212,8 @@ end
 //
 
 /*Stored procedures testing*/
-call sort("Books", "release_date", "desc");
+/*select * from Books order by release_date desc;
+call sort(`Books`, `release_date`, `desc`);
 call sort("Books", "release_date", "");
 
-call deletequery(Users, 3);
+call deletequery(Users, 3);*/
