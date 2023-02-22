@@ -212,8 +212,6 @@ end
 //
 
 /*Stored procedures testing*/
-/*select * from Books order by release_date desc;
 call sort(`Books`, `release_date`, `desc`);
-call sort("Books", "release_date", "");
 
-call deletequery(Users, 3);*/
+call deletequery(Users, 3);
