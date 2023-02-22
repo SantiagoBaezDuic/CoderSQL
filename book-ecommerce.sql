@@ -136,18 +136,23 @@ insert into Orders (order_client, total_price, products) values ("pedroper@mail.
 /*Views*/
 create or replace view clients as
 	(select order_client from Orders);
+    /*Selects all users who bought something.*/
     
 create or replace view low_stock as
 	(select book_name from Books where stock < 10);
+    /*Selects all books that are low on stock.*/
     
 create or replace view past_century as
 	(select book_name from Books where release_date < "2000-1-1");
+    /*Selects all books that were published prior to the year 2000.*/
 
 create or replace view brandon_books as
 	(select book_name from Books where author like upper("%brandon sanderson%"));
+    /*Selects all books from Brandon Sanderson.*/
     
 create or replace view short_books as
 	(select book_name, author, page_count from Books where page_count < 500);
+    /*Selects all books with a short page count.*/
     
 /*Functions*/
 drop function if exists discount_price;
@@ -162,6 +167,7 @@ set final_price = (price / 100) * (100 - discount);
 return final_price;
 end
 //
+/*Applies a certain discount percentage to every book.*/
 
 DELIMITER //
 create function books_by_author(book_author varchar(30), author varchar(30), book_name varchar(50)) returns varchar(20)
@@ -173,6 +179,7 @@ else return null;
 end if;
 end
 //
+/*Selects all books from a certain author.*/
 
 /*Functions testing*/ 
 select discount_price(price, 20) descuento from Books;
@@ -199,6 +206,7 @@ begin
     end if;
 end
 //
+/*Allows for selection of all rows sorted by a certain input.*/
 
 DELIMITER //
 create procedure deletequery (in tabla varchar(30), in deleteid int)
@@ -210,6 +218,7 @@ execute runSQL;
 deallocate prepare runSQL;
 end
 //
+/*Allows for row deletion based on index number.*/
 
 /*Stored procedures testing*/
 call sort(`Books`, `release_date`, `desc`);
