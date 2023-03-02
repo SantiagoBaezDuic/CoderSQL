@@ -212,7 +212,7 @@ DELIMITER //
 create procedure deletequery (in tabla varchar(30), in deleteid int)
 begin
 declare clausula varchar(255);
-set @clausula = concat(`delete from `,tabla,` where id=`,deleteid);
+set @clausula = concat(`delete from `, tabla,` where id = `, deleteid);
 prepare runSQL from @clausula;
 execute runSQL;
 deallocate prepare runSQL;
@@ -223,4 +223,4 @@ end
 /*Stored procedures testing*/
 call sort(`Books`, `release_date`, `desc`);
 
-call deletequery(Users, 3);
+call deletequery(`Users`, 3);
