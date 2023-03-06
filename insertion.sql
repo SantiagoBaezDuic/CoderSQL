@@ -19,6 +19,7 @@ insert ignore into Books (book_name, author, genre, release_date, page_count, pr
 insert ignore into Books (book_name, author, genre, release_date, page_count, price, stock) values ("El resplandor", "Stephen King", "Terror", "1977-1-28", 447, 6399, 20);
 insert ignore into Books (book_name, author, genre, release_date, page_count, price, stock) values ("El principito", "Saint-Exupery", "Child books", "2006-7-17", 541, 2200, 0);
 insert ignore into Books (book_name, author, genre, release_date, page_count, price, stock) values ("El camino de los reyes", "Brandon Sanderson", "Fantasy", "2010-8-31", 1007, 10799, 15);
+insert ignore into Books (book_name, author, genre, release_date, page_count, price, stock) values ("La metamorfosis", "Franz Kafka", "Relato", "1915-10-01", 70, 1500, 5);
 
 /*Carts table insertion*/
 insert ignore into Carts (cart_owner, products) values ("valel@mail.com", "El principito");
