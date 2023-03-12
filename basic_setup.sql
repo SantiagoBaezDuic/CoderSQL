@@ -3,6 +3,16 @@ drop database if exists  ecommerce;
 create database if not exists ecommerce;
 use ecommerce;
 
+/*
+Object creation index:
+-Basic tables creation at line 16.
+-Trigger tables creation at line 64.
+-Triggers declaration at line 81.
+-Views creation at line 107.
+-Functions creation at line 128.
+-Stored procedures creation at line 155.
+*/
+
 /*Books table creation*/
 create table if not exists Books (
 book_ID int primary key auto_increment not null unique,
