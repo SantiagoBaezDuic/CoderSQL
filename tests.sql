@@ -6,9 +6,9 @@ update Books set price = 6000 where book_ID = 4;
 
 /*Functions testing*/ 
 select discount_price(price, 20) descuento from Books;
-select books_by_author("brandon sanderson") from Books;
+select books_by_author("brandon sanderson", author, book_name) from Books;
 
 /*Stored procedures testing*/
-call sort(`Books`, `release_date`, `desc`);
+call get_low_stock(10);
 
-call deletequery(`Users`, 3);
+call delete_user(3);
