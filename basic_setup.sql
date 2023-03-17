@@ -6,11 +6,10 @@ use ecommerce;
 /*
 Object creation index:
 -Basic tables creation at line 16.
--Trigger tables creation at line 64.
--Triggers declaration at line 81.
--Views creation at line 107.
--Functions creation at line 128.
--Stored procedures creation at line 155.
+-Triggers declaration at line 111.
+-Views creation at line 180.
+-Functions creation at line 201.
+-Stored procedures creation at line 228.
 */
 
 /*Books table creation*/
@@ -86,8 +85,6 @@ sold_amount int
 create table if not exists Addresses (
 address varchar (50) not null unique
 );
-
-/*Trigger tables*/
 
 /*Newsletter*/
 create table if not exists Newsletter (
