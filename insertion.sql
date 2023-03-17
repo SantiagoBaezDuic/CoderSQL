@@ -27,5 +27,7 @@ insert ignore into Carts (cart_owner, products) values ("danilopez@mail.com", "E
 insert ignore into Carts (cart_owner, products) values ("julip@mail.com", "El resplandor");
 
 /*Orders table insertion*/
-insert into Orders (order_client, total_price, products) values ("miguef@mail.com", 10799, "El imperio final, La comunidad del anillo");
-insert into Orders (order_client, total_price, products) values ("pedroper@mail.com", 14598, "El imperio final, El resplandor");
+insert into Orders (order_client, total_price, product, author) values ("miguef@mail.com", 10799, "El imperio final", "Brandon Sanderson");
+insert into Orders (order_client, total_price, product, author) values ("miguef@mail.com", 10799, "La comunidad del anillo", "J.R.Tolkien");
+insert into Orders (order_client, total_price, product, author) values ("pedroper@mail.com", 14598, "El imperio final", "Brandon Sanderson");
+insert into Orders (order_client, total_price, product, author) values ("pedroper@mail.com", 14598, "El resplandor", "Stephen King");

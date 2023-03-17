@@ -25,6 +25,12 @@ price int,
 stock int
 );
 
+/*Authors table creation*/
+create table if not exists Authors (
+author_ID int primary key auto_increment not null unique,
+main_genre varchar(15) not null
+);
+
 /*Users table creation*/
 create table if not exists Users (
 user_ID int primary key auto_increment not null unique,
@@ -57,8 +63,28 @@ products varchar(100)
 create table if not exists Orders (
 order_ID int primary key auto_increment not null unique,
 order_client varchar(40) not null,
-total_price int,
-products varchar(100)
+total_price int not null,
+product varchar(50) not null,
+author varchar(30) not null
+);
+
+/*Best selling books table creation*/
+create table if not exists Best_Selling_Books (
+book_ID int primary key not null unique,
+book_name varchar(50) not null,
+sold_amount int
+);
+
+/*Best selling authors table creation*/
+create table if not exists Best_Selling_Authors (
+author_ID int primary key auto_increment not null unique,
+author_name varchar(50) not null,
+sold_amount int
+);
+
+/*Addresses table creation*/
+create table if not exists Addresses (
+address varchar (50) not null unique
 );
 
 /*Trigger tables*/
@@ -76,6 +102,12 @@ operation_date datetime,
 previous_price int,
 new_price int,
 operation_user varchar(40)
+);
+
+/*Admins email*/
+create table if not exists Admins_email (
+admin_ID int not null unique primary key,
+admin_email varchar(40) not null unique
 );
 
 /*Trigger declaration*/
@@ -101,6 +133,50 @@ begin
 	if (new.price <> old.price) then
 		insert into PriceChange (operation_date, previous_price, new_price, operation_user) values (current_timestamp(), old.price, new.price, user());
     end if;
+end;
+//
+
+/*Admin email*/
+DELIMITER //
+create trigger Admin_email
+after insert on Admins
+for each row
+begin
+	insert into Admins_email (admin_ID, admin_email) values (new.admin_ID, new.email);
+end;
+//
+
+/*Sales tracking*/
+DELIMITER //
+create trigger Sales_tracking
+after insert on Books
+for each row
+begin
+	insert into best_selling_books (book_ID, book_name, sold_amount) values (new.book_ID, new.book_name, 0);
+end;
+//
+
+/*Author Sales*/
+DELIMITER //
+create trigger Author_sales
+after insert on Books
+for each row
+begin
+    if (select exists(select * from best_selling_authors where upper(author_name) = upper(new.author)) = 0)
+    then
+	insert into best_selling_authors (author_name, sold_amount) values (new.author, 0);
+    end if;
+end;
+//
+
+/*Order Management*/
+DELIMITER //
+create trigger Order_management
+after insert on Orders
+for each row
+begin
+	update best_selling_books set sold_amount = sold_amount + 1 where upper(book_name) = upper(new.product);
+    update best_selling_authors set sold_amount = sold_amount + 1 where upper(author_name) = upper(new.author);
 end;
 //
 
